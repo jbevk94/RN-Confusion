@@ -35,6 +35,32 @@ const HomeNavigator = createStackNavigator({
       }
     }
 });
+const AboutNavigator = createStackNavigator({
+    About: { screen: About }
+  }, {
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: "#512DA8"
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        color: "#fff"
+      }
+    }
+});
+const ContactNavigator = createStackNavigator({
+    Contact: { screen: Contact }
+  }, {
+    navigationOptions: {
+      headerStyle: {
+        backgroundColor: "#512DA8"
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        color: "#fff"
+      }
+    }
+});
 
 const MainNavigator = createDrawerNavigator({
     Home: {
@@ -49,9 +75,24 @@ const MainNavigator = createDrawerNavigator({
       navigationOptions: {
         title: 'Menu',
         drawerLabel: 'Menu'
-      }
     }
-  }, {    drawerBackgroundColor: '#D1C4E9'});
+  }, 
+  About: {
+    screen: AboutNavigator,
+    navigationOptions: {
+      title: 'About',
+      drawerLabel: 'About'
+    }
+},
+Contact: {
+    screen: ContactNavigator,
+    navigationOptions: {
+      title: 'Contact',
+      drawerLabel: 'Contact'
+    }
+}
+  },
+ {    drawerBackgroundColor: '#D1C4E9'});
 
 class Main extends Component {
   render() {
