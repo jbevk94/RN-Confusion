@@ -6,7 +6,7 @@ import { DISHES } from '../shared/dishes';
 
 function RenderDish(props) {
 
-    const dish = props.dish;
+    const dish = props.dish; 
     
     if (dish != null) {
         return(
