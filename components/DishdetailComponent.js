@@ -12,6 +12,7 @@ import { Card, Icon, Input, Rating } from "react-native-elements";
 import { connect } from "react-redux";
 import { baseUrl } from "../shared/baseUrl";
 import { postFavorite, postComment } from "../redux/ActionCreators";
+import * as Animatable from 'react-native-animatable';
 
 const mapStateToProps = state => {
   return {
@@ -32,7 +33,12 @@ function RenderDish(props) {
 
   if (dish != null) {
     return (
-      <Card featuredTitle={dish.name} image={{ uri: baseUrl + dish.image }}>
+      <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
+      <Card
+          featuredTitle={dish.name}
+          image={{uri: baseUrl + dish.image}}>
+
+
         <Text style={{ margin: 10 }}>{dish.description}</Text>
         <View style={styles.cardRow}>
           <Icon
@@ -55,7 +61,8 @@ function RenderDish(props) {
             onPress={() => props.onShowModal()}
           />
         </View>
-      </Card>
+        </Card>
+            </Animatable.View>
     );
   } else {
     return <View></View>;
@@ -84,13 +91,15 @@ function RenderComments(props) {
   };
 
   return (
-    <Card title="Comments">
-      <FlatList
-        data={comments}
-        renderItem={renderCommentItem}
-        keyExtractor={item => item.id.toString()}
-      />
+    <Animatable.View animation="fadeInUp" duration={2000} delay={1000}>        
+    <Card title='Comments' >
+        <FlatList 
+            data={comments}
+            renderItem={renderCommentItem}
+            keyExtractor={item => item.id.toString()}
+        />
     </Card>
+</Animatable.View>
   );
 }
 
