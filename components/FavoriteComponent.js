@@ -4,7 +4,6 @@ import { ListItem } from "react-native-elements";
 import { connect } from "react-redux";
 import { Loading } from "./LoadingComponent";
 import { baseUrl } from "../shared/baseUrl";
-import Swipeout from "react-native-swipeout";
 import { deleteFavorite } from "../redux/ActionCreators";
 import * as Animatable from 'react-native-animatable';
 
@@ -19,7 +18,7 @@ const mapDispatchToProps = dispatch => ({
   deleteFavorite: dishId => dispatch(deleteFavorite(dishId))
 });
 
-class Favorites extends Component {
+class Favorite extends Component {
   static navigationOptions = {
     title: "My Favorites"
   };
@@ -92,4 +91,4 @@ class Favorites extends Component {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Favorites);
+)(Favorite);

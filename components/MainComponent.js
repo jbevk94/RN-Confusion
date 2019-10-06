@@ -4,7 +4,7 @@ import Menu from "./MenuComponent";
 import Contact from "./ContactComponent";
 import About from "./AboutComponent";
 import DishDetail from "./DishdetailComponent";
-import Favorites from './FavoriteComponent';
+import Favorite from './FavoriteComponent';
 import {
   View,
   Platform,
@@ -25,7 +25,7 @@ import * as ActionCreators from "../redux/ActionCreators";
 import Reservation from "./ReservationComponent";
 
 const FavoritesNavigator = createStackNavigator({
-  Favorites: { screen: Favorites }
+  Favorite: { screen: Favorite }
 }, {
   navigationOptions: ({ navigation }) => ({
     headerStyle: {
