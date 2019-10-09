@@ -116,7 +116,6 @@ class Reservation extends Component {
               dateInput: {
                 marginLeft: 36
               }
-              // ... You can check the source to find the other keys.
             }}
             onDateChange={date => {
               this.setState({ date: date });
@@ -128,7 +127,6 @@ class Reservation extends Component {
             onPress={() => this.handleReservation()}
             title="Reserve"
             color="#512DA8"
-          
           />
         </View>
       </Animatable.View>
