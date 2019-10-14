@@ -4,14 +4,15 @@ import Menu from "./MenuComponent";
 import Contact from "./ContactComponent";
 import About from "./AboutComponent";
 import DishDetail from "./DishdetailComponent";
-import Favorite from './FavoriteComponent';
+import Favorite from "./FavoriteComponent";
 import {
   View,
   Platform,
   ScrollView,
   Text,
   StyleSheet,
-  Image
+  Image,
+  ToastAndroid
 } from "react-native";
 import {
   createStackNavigator,
@@ -23,25 +24,8 @@ import { Icon } from "react-native-elements";
 import { connect } from "react-redux";
 import * as ActionCreators from "../redux/ActionCreators";
 import Reservation from "./ReservationComponent";
-import Login from './LoginComponent';
-
-const FavoritesNavigator = createStackNavigator({
-  Favorite: { screen: Favorite }
-}, {
-  navigationOptions: ({ navigation }) => ({
-    headerStyle: {
-        backgroundColor: "#512DA8"
-    },
-    headerTitleStyle: {
-        color: "#fff"            
-    },
-    headerTintColor: "#fff",
-    headerLeft: <Icon name="menu" size={24}
-    color='white'
-    onPress={ () => navigation.toggleDrawer() } />   
-  })
-});
-
+import Login from "./LoginComponent";
+import NetInfo from "@react-native-community/netinfo";
 
 const MenuNavigator = createStackNavigator(
   {
@@ -170,23 +154,55 @@ const ReservationNavigator = createStackNavigator(
   }
 );
 
+const FavoriteNavigator = createStackNavigator(
+  {
+    Favorite: { screen: Favorite }
+  },
+  {
+    navigationOptions: ({ navigation }) => ({
+      headerLeft: (
+        <Icon
+          name="menu"
+          size={24}
+          color="white"
+          onPress={() => navigation.toggleDrawer()}
+        />
+      ),
+      headerStyle: {
+        backgroundColor: "#512DA8"
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        color: "#fff"
+      }
+    })
+  }
+);
 
-const LoginNavigator = createStackNavigator({
-  Login: { screen: Login }
-}, {
-navigationOptions: ({ navigation }) => ({
-  headerStyle: {
-      backgroundColor: "#512DA8"
+const LoginNavigator = createStackNavigator(
+  {
+    Login: { screen: Login }
   },
-  headerTitleStyle: {
-      color: "#fff"            
-  },
-  headerTintColor: "#fff",
-  headerLeft: <Icon name="menu" size={24}
-    color='white'    
-    onPress={ () => navigation.toggleDrawer() } />    
-})
-});
+  {
+    navigationOptions: ({ navigation }) => ({
+      headerLeft: (
+        <Icon
+          name="menu"
+          size={24}
+          color="white"
+          onPress={() => navigation.toggleDrawer()}
+        />
+      ),
+      headerStyle: {
+        backgroundColor: "#512DA8"
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        color: "#fff"
+      }
+    })
+  }
+);
 
 const CustomDrawerContentComponent = props => (
   <ScrollView>
@@ -212,22 +228,6 @@ const CustomDrawerContentComponent = props => (
 
 const MainNavigator = createDrawerNavigator(
   {
-
-    Login: 
-  { screen: LoginNavigator,
-    navigationOptions: {
-      title: 'Login',
-      drawerLabel: 'Login',
-      drawerIcon: ({ tintColor, focused }) => (
-        <Icon
-          name='sign-in'
-          type='font-awesome'            
-          size={24}
-          color={tintColor}
-        />
-      ),
-    }
-  },
     Home: {
       screen: HomeNavigator,
       navigationOptions: {
@@ -293,38 +293,81 @@ const MainNavigator = createDrawerNavigator(
         )
       }
     },
-  Favorites: { 
-    screen: FavoritesNavigator,
-    navigationOptions: {
-      title: 'My Favorites',
-      drawerLabel: 'My Favorites',
-      drawerIcon: ({ tintColor, focused }) => (
-        <Icon
-          name='heart'
-          type='font-awesome'            
-          size={24}
-          color={tintColor}
-        />
-      )
+    Favorite: {
+      screen: FavoriteNavigator,
+      navigationOptions: {
+        title: "Favorites",
+        drawerLabel: "Favorites",
+        drawerIcon: ({ tintColor, focused }) => (
+          <Icon name="heart" type="font-awesome" size={22} color={tintColor} />
+        )
+      }
+    },
+    Login: {
+      screen: LoginNavigator,
+      navigationOptions: {
+        title: "Login",
+        drawerLabel: "Login",
+        drawerIcon: ({ tintColor, focused }) => (
+          <Icon name="key" type="font-awesome" size={22} color={tintColor} />
+        )
+      }
     }
-  }
-},
+  },
   {
-  }, {
-    initialRouteName: 'Home',
-    drawerBackgroundColor: '#D1C4E9',
+    drawerBackgroundColor: "#D1C4E9",
     contentComponent: CustomDrawerContentComponent
-  
   }
 );
 
 class Main extends Component {
   componentDidMount() {
-    this.props.fetchComments();
     this.props.fetchDishes();
-    this.props.fetchLeaders();
+    this.props.fetchComments();
     this.props.fetchPromos();
+    this.props.fetchLeaders();
+
+    NetInfo.fetch().then(connectionInfo => {
+      ToastAndroid.show(
+        "Initial Network Connectivity Type: " +
+          connectionInfo.type +
+          ", effectiveType: " +
+          connectionInfo.effectiveType,
+        ToastAndroid.LONG
+      );
+    });
+
+    NetInfo.addEventListener(this.handleConnectivityChange);
   }
+
+  componentWillUnmount() {
+    NetInfo.removeEventListener(this.handleConnectivityChange);
+  }
+
+  handleConnectivityChange = connectionInfo => {
+    switch (connectionInfo.type) {
+      case "none":
+        ToastAndroid.show("You are now offline!", ToastAndroid.LONG);
+        break;
+      case "wifi":
+        ToastAndroid.show("You are now connected to WiFi!", ToastAndroid.LONG);
+        break;
+      case "cellular":
+        ToastAndroid.show(
+          "You are now connected to Cellular!",
+          ToastAndroid.LONG
+        );
+        break;
+      case "unknown":
+        ToastAndroid.show(
+          "You now have unknown connection!",
+          ToastAndroid.LONG
+        );
+        break;
+      default:
+        break;
+    }
+  };
 
   render() {
     return (
